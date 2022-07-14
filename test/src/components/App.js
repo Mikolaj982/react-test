@@ -5,12 +5,10 @@ import DisplayCalculation from './DisplayCalculation'
 
 
 export default function App() {
-  const [currencyOption, setCurrencyOption] = useState([])
-  const [convertedValue, setConvertedValue ] = useState(0)
-  const [fromCurrency, setFromCurrency] = useState()
-  const [fromInput, setFromInput] = useState()
-
- 
+  const [currencyOptions, setCurrencyOptions] = useState([])
+  const [selectedValue, setSelectedValue] = useState()
+  const [inputValue, setInputValue] = useState()
+  const [total, setTotal] = useState()
 
 
 
@@ -18,8 +16,9 @@ export default function App() {
     fetch(`https://api.nbp.pl/api/exchangerates/tables/a/`)
     .then((response) => response.json())
     .then((data) => {
-        setCurrencyOption([...Object.values(data[0].rates.filter(rate => rate.code === 'USD' ? rate.mid : '' || rate.code === 'EUR' ? rate.mid : '' || rate.code === 'CHF' ? rate.mid : ''))])
-              
+        const listOfOptions = [...Object.values(data[0].rates.filter(rate => rate.code === 'USD' ? rate.mid : '' || rate.code === 'EUR' ? rate.mid : '' || rate.code === 'CHF' ? rate.mid : ''))]
+        setCurrencyOptions(listOfOptions)
+        setSelectedValue(listOfOptions[0].mid)
       })
       },[])
 
@@ -28,11 +27,18 @@ export default function App() {
     <div>
     <h1>Przelicznik walut</h1>
     <Input 
-      currencyOption={currencyOption}
+      currencyOptions={currencyOptions}
+      setSelectedValue={setSelectedValue}
+      setInputValue={setInputValue}
       />
-    <DisplayCalculation />
+    <DisplayCalculation 
+      selectedValue={selectedValue}
+      inputValue={inputValue}
+      setTotal={setTotal}
+    />
+  
+    {total ? <p>{total}</p> : ''}
     </div>
-    
     </>
   )
 }
