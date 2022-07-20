@@ -5,8 +5,6 @@ export default function DisplayCalculation({inputValue, selectedValue, setTotal}
     
     const logClick = () => {
         setTotal(inputValue * selectedValue)
-        console.log(selectedValue)
-        
     }
 
   return (
